@@ -1,0 +1,146 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/jfromaniello/express-unless#readme"
+
+    >express-unless (v0.3.0)</a>
+</h1>
+<h4>Conditionally add a middleware to express with some common patterns.</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.express-unless">module express-unless</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.express-unless.express-unless">
+            function <span class="apidocSignatureSpan"></span>express-unless
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.express-unless" id="apidoc.module.express-unless">module express-unless</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.express-unless.express-unless" id="apidoc.element.express-unless.express-unless">
+        function <span class="apidocSignatureSpan"></span>express-unless
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">express-unless = function (options) {
+  var parent = this;
+
+  var opts = typeof options === &#x27;function&#x27; ? {custom: options} : options;
+  opts.useOriginalUrl = (typeof opts.useOriginalUrl === &#x27;undefined&#x27;) ? true : opts.useOriginalUrl;
+
+  return function (req, res, next) {
+    var url = URL.parse((opts.useOriginalUrl ? req.originalUrl : req.url) || req.url || &#x27;&#x27;, true);
+
+    var skip = false;
+
+    if (opts.custom) {
+      skip = skip || opts.custom(req);
+    }
+
+    var paths = !opts.path || Array.isArray(opts.path) ?
+                opts.path : [opts.path];
+
+    if (paths) {
+      skip = skip || paths.some(function (p) {
+        return isUrlMatch(p, url.pathname) &#x26;&#x26; isMethodMatch(p.methods, req.method);
+      });
+    }
+
+    var exts = (!opts.ext || Array.isArray(opts.ext)) ?
+               opts.ext : [opts.ext];
+
+    if (exts) {
+      skip = skip || exts.some(function (ext) {
+        return url.pathname.substr(ext.length * -1) === ext;
+      });
+    }
+
+    var methods = (!opts.method || Array.isArray(opts.method)) ?
+                  opts.method : [opts.method];
+
+    if (methods) {
+      skip = skip || !!~methods.indexOf(req.method);
+    }
+
+    if (skip) {
+      return next();
+    }
+
+    parent(req, res, next);
+  };
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
